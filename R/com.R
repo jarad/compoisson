@@ -130,11 +130,10 @@ rcom = function(n, lambda, nu, log.z = NULL)
 		j = 0;
 		while (1)
 		{
-			new.log.prob = com.log.difference( log.prob, com.log.density(j, lambda, nu, log.z) );
-			if (is.nan(new.log.prob))
-				break;
+                        log.dens = com.log.density(j, lambda, nu, log.z)
+			if (log.dens>log.prob) break;
 
-			log.prob = new.log.prob;
+			log.prob = com.log.sum(log.prob, -log.dens)
 			j = j + 1;
 		}
 
