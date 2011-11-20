@@ -10,3 +10,4 @@ Description: Provides routines for density and moments of the
 	COM-Poisson model for over/under-dispersed count data.
 License: GPL-3
 Depends: stats, MASS
+URL: https://github.com/jarad/compoisson
