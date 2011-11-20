@@ -116,6 +116,8 @@ rcom = function(n, lambda, nu, log.z = NULL) {
   # Check arguments
   if (lambda < 0 || nu < 0)
     stop("Invalid arguments, only defined for lambda >= 0, nu >= 0");
+  if (nu == 1) return(rpois(n, lambda))
+
   if (is.null(log.z))
     log.z = com.compute.log.z(lambda, nu);
 
