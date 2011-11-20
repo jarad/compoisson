@@ -112,35 +112,31 @@ com.var = function(lambda, nu)
 	return ( com.expectation(function(x) {x^2}, lambda, nu) - (com.mean(lambda,nu))^2 );
 }
 
-rcom = function(n, lambda, nu, log.z = NULL)
-{
-	# Check arguments
-	if (lambda < 0 || nu < 0)
-		stop("Invalid arguments, only defined for lambda >= 0, nu >= 0");
-	if (is.null(log.z))
-		log.z = com.compute.log.z(lambda, nu);
+rcom = function(n, lambda, nu, log.z = NULL) {
+  # Check arguments
+  if (lambda < 0 || nu < 0)
+    stop("Invalid arguments, only defined for lambda >= 0, nu >= 0");
+  if (is.null(log.z))
+    log.z = com.compute.log.z(lambda, nu);
 
-	r = NULL;	# Vector of random values
+  r = NULL;	# Vector of random values
 
-	for (i in 1:n)
-	{
-		# Get a uniform random variable and find the smallest value x such that
-		# the cdf of x is greater than the random value
-		log.prob = log(runif(1));
-		j = 0;
-		while (1)
-		{
-                        log.dens = com.log.density(j, lambda, nu, log.z)
-			if (log.dens>log.prob) break;
+  for (i in 1:n) {
+    # Get a uniform random variable and find the smallest value x such that
+    # the cdf of x is greater than the random value
+    log.prob = log(runif(1));
+    j = 0;
+    log.dens = com.log.density(j, lambda, nu, log.z)
+    while (log.prob>log.dens)) {
+      j = j+1
+      log.prob = log(exp(log.prob)-exp(log.dens))
+      log.dens = com.log.density(j,lambda,nu,log.z)
+    }
 
-			log.prob = com.log.sum(log.prob, -log.dens)
-			j = j + 1;
-		}
+    r = c(r, j);
+  }
 
-		r = c(r, j);
-	}
-
-	return (r);
+  return (r);
 }
 
 
