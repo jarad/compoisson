@@ -6,5 +6,5 @@ received package from Jeffrey Dunn
 0.3.1 (20 Nov 2011)
 -----
 
-replaced com.log.factorial with lfactorial
+replaced com.log.factorial with lfactorial and used log1p
 
