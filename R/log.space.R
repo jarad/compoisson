@@ -5,9 +5,9 @@ com.log.sum = function(x,y)		# log.sum(x,y) = log( exp(x) + exp(y) )
 	else if (y == -Inf)
 		{ return (x); }
 	else if (x > y)
-		{ return (x + log( 1 + exp(y - x) ) ); }
+		{ return (x + log1p( exp(y - x) ) ); }
 	else
-		{ return (y + log( 1 + exp(x - y) ) ); }
+		{ return (y + log1p( exp(x - y) ) ); }
 }
 
 com.log.difference = function(x,y)	# log.difference(x,y) = log( exp(x) - exp(y) )
@@ -17,7 +17,7 @@ com.log.difference = function(x,y)	# log.difference(x,y) = log( exp(x) - exp(y) 
 	else if (y == -Inf)
 		{ return (x); }
 	else if (x > y)
-		{ return (x + log( 1 - exp(y - x) ) ); }
+		{ return (x + log1p( -exp(y - x) ) ); }
 	else
 		{ return (NaN); } # y<x returns NaN?
 }
