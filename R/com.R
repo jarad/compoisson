@@ -79,7 +79,7 @@ com.loglikelihood = function(x, lambda, nu)
 		return (-Inf);
 
 	log.z = com.compute.log.z(lambda, nu);
-	return (x[,2] %*% ( x[,1] * log(lambda) - nu * com.log.factorial(x[,1]) - log.z ));
+	return (x[,2] %*% ( x[,1] * log(lambda) - nu * lfactorial(x[,1]) - log.z ));
 }
 
 com.expectation = function(f, lambda, nu, log.error = 0.001)
