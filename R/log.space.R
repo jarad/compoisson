@@ -19,6 +19,6 @@ com.log.difference = function(x,y)	# log.difference(x,y) = log( exp(x) - exp(y) 
 	else if (x > y)
 		{ return (x + log( 1 - exp(y - x) ) ); }
 	else
-		{ return (NaN); }
+		{ return (NaN); } # y<x returns NaN?
 }
 
