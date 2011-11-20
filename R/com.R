@@ -127,9 +127,9 @@ rcom = function(n, lambda, nu, log.z = NULL) {
     log.prob = log(runif(1));
     j = 0;
     log.dens = com.log.density(j, lambda, nu, log.z)
-    while (log.prob>log.dens)) {
+    while (log.prob>log.dens) {
       j = j+1
-      log.prob = log(exp(log.prob)-exp(log.dens))
+      log.prob = log(exp(log.prob)-exp(log.dens))     # Decrement the remaining probability
       log.dens = com.log.density(j,lambda,nu,log.z)
     }
 
