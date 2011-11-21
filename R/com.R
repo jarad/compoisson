@@ -18,31 +18,36 @@ com.fit = function(x)
 	return (fit);
 }
 
+
+
 com.compute.log.z = function(lambda, nu, log.error = 0.001)
 {
-	# Perform argument checking
-	if (lambda < 0 || nu < 0)
-		stop("Invalid arguments, only defined for lambda >= 0, nu >= 0");
+  # Perform argument checking
+  if (lambda <= 0 || nu < 0)
+    stop("Invalid arguments, only defined for lambda > 0, nu >= 0");
 	
-	# Initialize values
-	z = -Inf;
-	z.last = 0;
-	j = 0;
+  # Initialize values
+  j = 0;
+  llambda = log(lambda)                                 # precalculate for speed
+  inclfact = 0                                          # log(factorial(0))
+  z = j * llambda - nu * inclfact;                      # first term in sum
+  z.last = -Inf                                         # to ensure entering the loop
 
-	# Continue until we have reached specified precision
-	while (abs(z - z.last) > log.error)
-	{
-		z.last = z;
-		z = com.log.sum(z, j * log(lambda) - nu * lfactorial(j));
-
-		j = j + 1;
-	}
-	return (z);
+  # Continue until we have reached specified precision
+  while (abs(z - z.last) > log.error) {
+    z.last = z;                                         # For comparison in while statement
+    z = com.log.sum(z, j * llambda - nu * inclfact );   # Log of current sum
+    j = j + 1;                                          # Next term in sum
+    inclfact = inclfact+log(j)                          # Calculate increment for log factorial
+  }
+  return (z);
 }
+
+
 
 com.compute.z = function(lambda, nu, log.error = 0.001)
 {
-	return (exp(com.compute.log.z(lambda,nu,log.error)));
+  return (exp(com.compute.log.z(lambda,nu,log.error)));
 }
 
 dcom = function(x, lambda, nu, z = NULL)
