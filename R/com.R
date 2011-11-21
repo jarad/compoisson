@@ -26,7 +26,7 @@ com.compute.log.z = function(lambda, nu, log.error = 0.001)
   if (lambda <= 0 || nu < 0)
     stop("Invalid arguments, only defined for lambda > 0, nu >= 0");
 
-  if (nu==0) return(-log(1-lamda)) # Geometric sum
+  if (nu==0) return(-log(1-lambda)) # Geometric sum
   if (nu==1) return(exp(-lambda))  # Poisson normalizing constant
 	
   # Initialize values

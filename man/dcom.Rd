@@ -20,6 +20,9 @@
 	\item{z}{ normalizing constant, computed if not specified }
 	\item{n}{ number of random values to return }
 	\item{log.z}{ natural log of z }
+        \item{log.p}{ if TRUE, probabilities p are given as log(p).}
+        \item{lower.tail}{ if TRUE (default), probabilities are P[X <= x],
+          otherwise, P[X > x].}
 }
 \details{
 	Computes the probability mass function of the COM-Poisson distribution
