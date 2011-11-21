@@ -53,6 +53,9 @@ com.compute.z = function(lambda, nu, log.error = 0.001)
   return (exp(com.compute.log.z(lambda,nu,log.error)));
 }
 
+
+
+
 dcom = function(x, lambda, nu, z = NULL)
 {
 	# Perform argument checking
@@ -120,34 +123,46 @@ com.var = function(lambda, nu)
 	return ( com.expectation(function(x) {x^2}, lambda, nu) - (com.mean(lambda,nu))^2 );
 }
 
+
+
+
 rcom = function(n, lambda, nu, log.z = NULL) {
+  qcom(runif(n), lambda, nu)
+}
+
+
+qcom = function(p, lambda, nu, log.z = NULL, lower.tail = TRUE, log.p = FALSE) {
   # Check arguments
   if (lambda < 0 || nu < 0)
     stop("Invalid arguments, only defined for lambda >= 0, nu >= 0");
-  if (nu == 1) return(rpois(n, lambda))
+  if (nu == 1) return(qpois(p, lambda, lower.tail=lower.tail, log.p=log.p))
+
+  if (!log.p)      lp = log(p)
+  if (!lower.tail) lp = 1-exp(lp) # better way to calculate this?
 
   if (is.null(log.z))
     log.z = com.compute.log.z(lambda, nu);
 
-  r = NULL;	# Vector of random values
-
   # Pre-calculate for speed
-  ll  = log(lambda)
+  ll = log(lambda)
+  n  = length(p)
+  r  = rep(NA,n)
 
   for (i in 1:n) {
     # inverse CDF method
-    l.u = log(runif(1));                         
-    l.d = -log.z                     # P(X=0)=1/Z
+    lu = lp[i]
+    ld = -log.z                  # log density, P(X=0)=1/Z
     j = 0;
-    while (l.u>l.d) {
+    while (lu>ld) {
       j = j+1
-      l.u = l.u+log1p(-exp(l.d-l.u)) # Decrement the remaining probability
-      l.d = l.d+ll-nu*log(j)         # Ratio of pmf for successive integers is j^nu/lambda
+      lu = lu+log1p(-exp(ld-lu)) # decrement the remaining probability
+      ld = ld+ll-nu*log(j)       # ratio of pmf for successive integers is j^nu/lambda
     }
-    r = c(r, j);                     # New draw is j
+    r[i] = j                     # new draw is j
   }
 
   return (r);
+
 }
 
 

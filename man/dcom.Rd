@@ -1,6 +1,7 @@
 \name{dcom}
 \alias{dcom}
 \alias{rcom}
+\alias{qcom}
 \title{ The COM-Poisson Distribution }
 \description{
 	Probability mass function and random generation for the COM-Poisson
@@ -8,12 +9,14 @@
 }
 \usage{
 	dcom(x, lambda, nu, z = NULL)
+        qcom(p, lambda, nu, log.z = NULL, lower.tail = TRUE, log.p = FALSE)
 	rcom(n, lambda, nu, log.z = NULL)
 }
 \arguments{
-	\item{x}{ level to evaluate the PMF at }
-	\item{lambda}{ value of lambda parameter }
-	\item{nu}{ value of nu parameter }
+	\item{x}{ vector of (non-negative integer) quantiles. }
+        \item{p}{ vector of probabilities.}
+	\item{lambda}{ scalar value of lambda parameter }
+	\item{nu}{ scalar value of nu parameter }
 	\item{z}{ normalizing constant, computed if not specified }
 	\item{n}{ number of random values to return }
 	\item{log.z}{ natural log of z }
@@ -28,6 +31,7 @@
 	\code{dcom} gives the probability that a random COM-Poisson variable X takes value x.
 	\code{rcom} gives a vector of \code{n} random values sampled from the COM-Poisson
 	distribution.
+        \code{qcom} gives the quantile function
 }
 \references{ Shmueli, G., Minka, T. P., Kadane, J. B., Borle, S. and Boatwright, P., \dQuote{A useful distribution for fitting discrete data: Revival of the Conway-Maxwell-Poisson distribution,} J. Royal Statist. Soc., v54, pp. 127-142, 2005. }
 \author{ Jeffrey Dunn }
