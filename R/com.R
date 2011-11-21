@@ -25,20 +25,23 @@ com.compute.log.z = function(lambda, nu, log.error = 0.001)
   # Perform argument checking
   if (lambda <= 0 || nu < 0)
     stop("Invalid arguments, only defined for lambda > 0, nu >= 0");
+
+  if (nu==0) return(-log(1-lamda)) # Geometric sum
+  if (nu==1) return(exp(-lambda))  # Poisson normalizing constant
 	
   # Initialize values
   j = 0;
   llambda = log(lambda)                                 # precalculate for speed
-  inclfact = 0                                          # log(factorial(0))
-  z = j * llambda - nu * inclfact;                      # first term in sum
+  lfact = 0                                             # log(factorial(0))
+  z = j * llambda - nu * lfact;                         # first term in sum
   z.last = -Inf                                         # to ensure entering the loop
 
   # Continue until we have reached specified precision
   while (abs(z - z.last) > log.error) {
     z.last = z;                                         # For comparison in while statement
-    z = com.log.sum(z, j * llambda - nu * inclfact );   # Log of current sum
     j = j + 1;                                          # Next term in sum
-    inclfact = inclfact+log(j)                          # Calculate increment for log factorial
+    lfact = lfact+log(j)                                # Calculate increment for log factorial
+    z = com.log.sum(z, j * llambda - nu * lfact );      # Log of current sum
   }
   return (z);
 }
@@ -128,19 +131,20 @@ rcom = function(n, lambda, nu, log.z = NULL) {
 
   r = NULL;	# Vector of random values
 
-  for (i in 1:n) {
-    # Get a uniform random variable and find the smallest value x such that
-    # the cdf of x is greater than the random value
-    log.prob = log(runif(1));
-    j = 0;
-    log.dens = com.log.density(j, lambda, nu, log.z)
-    while (log.prob>log.dens) {
-      j = j+1
-      log.prob = log(exp(log.prob)-exp(log.dens))     # Decrement the remaining probability
-      log.dens = com.log.density(j,lambda,nu,log.z)
-    }
+  # Pre-calculate for speed
+  ll  = log(lambda)
 
-    r = c(r, j);
+  for (i in 1:n) {
+    # inverse CDF method
+    l.u = log(runif(1));                         
+    l.d = -log.z                     # P(X=0)=1/Z
+    j = 0;
+    while (l.u>l.d) {
+      j = j+1
+      l.u = l.u+log1p(-exp(l.d-l.u)) # Decrement the remaining probability
+      l.d = l.d+ll-nu*log(j)         # Ratio of pmf for successive integers is j^nu/lambda
+    }
+    r = c(r, j);                     # New draw is j
   }
 
   return (r);
