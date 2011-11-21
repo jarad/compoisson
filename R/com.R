@@ -20,7 +20,7 @@ com.fit = function(x)
 
 
 
-com.compute.log.z = function(lambda, nu, log.error = 0.001)
+com.compute.log.z = function(lambda, nu, log.error = 1e-6)
 {
   # Perform argument checking
   if (lambda <= 0 || nu < 0)
@@ -48,7 +48,7 @@ com.compute.log.z = function(lambda, nu, log.error = 0.001)
 
 
 
-com.compute.z = function(lambda, nu, log.error = 0.001)
+com.compute.z = function(lambda, nu, log.error = 0.000001)
 {
   return (exp(com.compute.log.z(lambda,nu,log.error)));
 }
@@ -56,18 +56,26 @@ com.compute.z = function(lambda, nu, log.error = 0.001)
 
 
 
-dcom = function(x, lambda, nu, z = NULL)
+dcom = function(x, lambda, nu, log.z = NULL, log = FALSE)
 {
-	# Perform argument checking
-	if (lambda < 0 || nu < 0)
-		stop("Invalid arguments, only defined for lambda >= 0, nu >= 0");
-	if (x < 0 || x != floor(x))
-		return (0);
-	if (is.null(z) || z <= 0)
-		z = com.compute.z(lambda, nu);
+  if (nu==1) return(dpois(x,lambda,log=log))
+
+  # Perform argument checking
+  if (lambda < 0 || nu < 0)
+    stop("Invalid arguments, only defined for lambda >= 0, nu >= 0");
+  if (x < 0 || x != floor(x))
+    return (0);
+  if (is.null(log.z))
+    log.z = com.compute.log.z(lambda, nu);
 	
-	# Return pmf
-	return ((lambda ^ x) * ((factorial(x)) ^ -nu) / z);
+  # Return pmf
+  log.d = x*log(lambda)-nu*lfactorial(x)-log.z
+  if (log) {
+    return(log.d)
+  } else {
+    return(exp(log.d))
+  }
+  
 }
 
 com.log.density = function(x, lambda, nu, log.z = NULL)
